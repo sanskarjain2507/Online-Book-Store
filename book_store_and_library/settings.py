@@ -20,10 +20,10 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/2.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = ')-91bxf8(c$e+d*qj0k9^n0*d=59c-7_l7pu&pwi!$g7-qn09^'
+SECRET_KEY = '###'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 
 # Application definition
@@ -79,7 +79,7 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'book_store_and_library.wsgi.application'
 
-ENCRYPT_KEY=b'-dVGI4jgpg7eLm30md1q9v7o8Yn6kXz7LldSxVFwMGc='
+ENCRYPT_KEY=b'-##'
 #keep this key very very secure and dont pass it to server
 
 # Database

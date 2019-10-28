@@ -1,0 +1,219 @@
+{% extends 'base.html' %}
+{% block title %}Add book{% endblock %}
+{% block nav_title %} WELCOME {{username}} {% endblock %}
+{% block nav_items %}
+<div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+    <ul class="navbar-nav">
+        <li>
+            <form method="post" action="/employee_login/after_login">
+                    {% csrf_token %}
+                <input type="hidden" value="{{role}}" name="role">
+                <input type="hidden" value="{{username}}" name="username">
+                <button style="background-color:transparent; border:0;" class="nav-link">Home</button>
+            </form>
+        </li>
+
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle"  id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">More Options</a>
+            <div class="dropdown-menu bg-dark" aria-labelledby="navbarDropdownMenuLink">
+
+                 <a class="dropdown-item bg-dark">
+                    <form method="post" action="/employee_login/emp_profile_show">
+                        {% csrf_token %}
+                        <input type="hidden" value="{{role}}" name="role">
+                        <input type="hidden" value="{{username}}" name="username">
+                        <button style="background-color:transparent; border:0;" class="nav-link">My Profile</button>
+                    </form>
+                 </a>
+
+                 <a class="dropdown-item bg-dark">
+                    <form method="post" action="/employee_login/change_password">
+                       {% csrf_token %}
+                        <input type="hidden" value="{{role}}" name="role">
+                        <input type="hidden" name="username" value="{{username}}">
+                        <button style="background-color:transparent; border:0;" class="nav-link" id="chngpass">Change Password</button>
+                    </form>
+                 </a>
+
+                 <a class="dropdown-item bg-dark">
+                     <form method="post" action="/employee_login/delivered_orders">
+                       {% csrf_token %}
+                       <input type="hidden" value="{{role}}" name="role">
+                       <input type="hidden" value="{{username}}" name="username">
+                       <button type="submit" style="background-color:transparent; border:0;" class="nav-link"  id="delivered_orders">View Delivered Orders</button>
+                     </form>
+                 </a>
+
+            </div>
+        </li>
+
+        <li class="nav-item">
+             <form method="post" action="/employee_login/orders">
+                 {% csrf_token %}
+                 <input type="hidden" value="{{role}}" name="role">
+                 <button type="submit" style="background-color:transparent; border:0;" id="view_orders" class="nav-link">View Orders</button>
+                 <input type="hidden" value="{{username}}" name="username">
+             </form>
+        </li>
+
+        <li class="nav-item">
+             <form method="post" action="/books/add_book">
+                 {% csrf_token %}
+                 <input type="hidden" value="{{role}}" name="role">
+                 <input type="hidden" name="username" value="{{username}}">
+                 <button style="background-color:transparent; border:0;" class="nav-link active"  id="add_book">Add Book</button>
+             </form>
+        </li>
+
+        <li class="nav-item">
+            <form method="post" action="/employee_login/about_us">
+                {% csrf_token %}
+                <input type="hidden" value="{{role}}" name="role">
+                <input type="hidden" value="{{username}}" name="username">
+                <button type="submit" class="nav-link" style="background-color:transparent; border:0;">About</button>
+            </form>
+        </li>
+
+        <li class="nav-item">
+            <form method="post" action="/employee_login/contact_us">
+                {% csrf_token %}
+                <input type="hidden" value="{{role}}" name="role">
+                <input type="hidden" value="{{username}}" name="username">
+                <button type="submit" class="nav-link" style="background-color:transparent; border:0;">Contact Us</button>
+            </form>
+        </li>
+
+        <li class="nav-item">
+             <form method="post" action="/customer_login/user_logout">
+                 {% csrf_token %}
+                 <input type="hidden" value="{{role}}" name="role">
+                 <input type="hidden" value="{{username}}" name="username">
+                 <button class="nav-link" style="background-color:transparent; border:0;"  id="emp_logout">Logout</button>
+             </form>
+        </li>
+   </ul>
+</div>
+{% endblock %}
+{% block body %}
+
+<div class="alert alert-success" role="alert">
+    <center>BOOK REGISTRATION FORM</center>
+</div>
+<div class="container">
+    <center>
+    <form method="post" id="form" action="/books/register_success" enctype="multipart/form-data">
+        {% csrf_token %}<input type="hidden" value="{{role}}" name="role">
+        <input type="hidden" value="{{username}}" name="username">
+    <table>
+        <tr class="table-primary">
+            <td>BOOK ID:</td>
+            <td>{{form.bookId}}</td>
+        </tr>
+        <tr class="table-warning">
+            <td>TITLE:</td>
+            <td>{{form.title}}</td>
+        </tr>
+
+        <tr class="table-primary">
+            <td>ISBN:</td>
+            <td>{{form.isbn}}</td>
+        </tr>
+
+        <tr class="table-warning">
+            <td>LANGUAGE:</td>
+            <td>{{form.language}}</td>
+        </tr>
+
+        <tr class="table-primary">
+            <td>PUBLISHER:</td>
+            <td>{{form.publisher}}</td>
+        </tr>
+
+        <tr class="table-warning">
+            <td>AUTHOR:</td>
+            <td>{{form.author}}</td>
+        </tr>
+
+        <tr class="table-primary">
+            <td>MRP(in rupees):</td>
+            <td>{{form.mrp}}</td>
+        </tr>
+
+        <tr class="table-warning">
+            <td>PUBLISH YEAR:</td>
+            <td>{{form.publishYear}}</td>
+        </tr>
+
+        <tr class="table-primary">
+            <td>QUANTITY AVAILABLE:</td>
+            <td>{{form.quantity}}</td>
+        </tr>
+
+        <tr class="table-warning">
+            <td>DESCRIPTION:</td>
+            <td>{{form.description}}</td>
+        </tr>
+
+        <tr class="table-primary">
+            <td>FOR SALE:</td>
+        <td><input type="radio" name="sale" value="yes" id="genm">Yes&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <input type="radio" name="sale" value="no" id="genf">No
+        <div class="err1" style="color:red;"></div>
+        </td>
+        </tr>
+
+        <tr class="table-warning">
+            <td>Category:</td>
+            <td>{{form.category}}</td>
+        </tr>
+        <tr class="table-primary">
+            <td>RATING:</td>
+            <td>{{form.rating}}</td>
+        </tr>
+    </table>
+    <br><br>
+    Upload Image : {{form.image}}
+        <br><br>
+        <button type="submit">ADD BOOK</button>
+    </form>
+    </center>
+</div>
+<br><br>
+{% endblock %}
+{% block js %}
+<script>
+ var allowsubmit = false;
+        $(function(){
+
+            $('#form').submit(function()
+            {
+                var sale1=$("input[name='sale']:checked").val();
+                $('err1').text('');
+                if (sale1){
+                    $('.err1').text('');
+                    return true;
+                }
+
+                else{
+                     $('.err1').text('Please provide this option');
+                    return false;
+                    }
+
+
+
+
+            });
+
+    $('#emp_logout').click(function(){
+localStorage.removeItem('cart','chkcart');
+
+})
+
+window.onunload=function(){
+localStorage.removeItem('cart','chkcart');
+}
+
+            });
+
+</script>
+{% endblock %}

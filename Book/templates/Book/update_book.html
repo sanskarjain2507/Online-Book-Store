@@ -1,0 +1,389 @@
+{% extends 'base.html' %}
+{% block title %}Update Book{% endblock %}
+{% block nav_title %} WELCOME {{username}} {% endblock %}
+{% block nav_items %}
+<div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+    <ul class="navbar-nav">
+        <li>
+            <form method="post" action="/employee_login/after_login">
+                    {% csrf_token %}
+                <input type="hidden" value="{{role}}" name="role">
+                <input type="hidden" value="{{username}}" name="username">
+                <button style="background-color:transparent; border:0;" class="nav-link">Home</button>
+            </form>
+        </li>
+
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle"  id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">More Options</a>
+            <div class="dropdown-menu bg-dark" aria-labelledby="navbarDropdownMenuLink">
+
+                 <a class="dropdown-item bg-dark">
+                    <form method="post" action="/employee_login/emp_profile_show">
+                        {% csrf_token %}
+                        <input type="hidden" value="{{role}}" name="role">
+                        <input type="hidden" value="{{username}}" name="username">
+                        <button style="background-color:transparent; border:0;" class="nav-link">My Profile</button>
+                    </form>
+                 </a>
+
+                 <a class="dropdown-item bg-dark">
+                    <form method="post" action="/employee_login/change_password">
+                       {% csrf_token %}
+                        <input type="hidden" value="{{role}}" name="role">
+                        <input type="hidden" name="username" value="{{username}}">
+                        <button style="background-color:transparent; border:0;" class="nav-link" id="chngpass">Change Password</button>
+                    </form>
+                 </a>
+
+                 <a class="dropdown-item bg-dark">
+                     <form method="post" action="/employee_login/delivered_orders">
+                       {% csrf_token %}
+                       <input type="hidden" value="{{role}}" name="role">
+                       <input type="hidden" value="{{username}}" name="username">
+                       <button type="submit" style="background-color:transparent; border:0;" class="nav-link"  id="delivered_orders">View Delivered Orders</button>
+                     </form>
+                 </a>
+
+            </div>
+        </li>
+
+        <li class="nav-item">
+             <form method="post" action="/employee_login/orders">
+                 {% csrf_token %}
+                 <input type="hidden" value="{{role}}" name="role">
+                 <button type="submit" style="background-color:transparent; border:0;" id="view_orders" class="nav-link">View Orders</button>
+                 <input type="hidden" value="{{username}}" name="username">
+             </form>
+        </li>
+
+        <li class="nav-item">
+             <form method="post" action="/books/add_book">
+                 {% csrf_token %}
+                 <input type="hidden" value="{{role}}" name="role">
+                 <input type="hidden" name="username" value="{{username}}">
+                 <button style="background-color:transparent; border:0;" class="nav-link"  id="add_book">Add Book</button>
+             </form>
+        </li>
+
+        <li class="nav-item">
+            <form method="post" action="/employee_login/about_us">
+                {% csrf_token %}
+                <input type="hidden" value="{{role}}" name="role">
+                <input type="hidden" value="{{username}}" name="username">
+                <button type="submit" class="nav-link" style="background-color:transparent; border:0;">About</button>
+            </form>
+        </li>
+
+        <li class="nav-item">
+            <form method="post" action="/employee_login/contact_us">
+                {% csrf_token %}
+                <input type="hidden" value="{{role}}" name="role">
+                <input type="hidden" value="{{username}}" name="username">
+                <button type="submit" class="nav-link" style="background-color:transparent; border:0;">Contact Us</button>
+            </form>
+        </li>
+
+        <li class="nav-item">
+             <form method="post" action="/customer_login/user_logout">
+                 {% csrf_token %}
+                 <input type="hidden" value="{{role}}" name="role">
+                 <input type="hidden" value="{{username}}" name="username">
+                 <button class="nav-link" style="background-color:transparent; border:0;"  id="emp_logout">Logout</button>
+             </form>
+        </li>
+   </ul>
+</div>
+{% endblock %}
+{% block body %}
+
+
+<div class="container">
+    <center>
+    <form method="post" id="form" action="/books/update_success" enctype="multipart/form-data">
+        {% csrf_token %}<input type="hidden" value="{{role}}" name="role">
+        <input type="hidden" value="{{book.id}}" name="bid">
+
+    <table>
+        <tr class="table-primary">
+            <td>BOOK ID:</td>
+            <td><input type="text" name="bookId" id="i1" value="{{book.bookId}}" disabled></td>
+            <td><input type="button" id="e1" class="btn ebn btn-success" value="EDIT"></td>
+            <td><input type="button" id="c1" class="btn ebc btn-warning" value="CONFIRM" style="display: none;"></td>
+            <td><div style="color:red;" id="err1"></div></td>
+
+            </tr>
+        <tr class="table-warning">
+            <td>TITLE:</td>
+            <td><input type="text" name="title" id="i2" value="{{book.title}}" disabled></td>
+            <td><input type="button" id="e2" class="btn ebn btn-success" value="EDIT"></td>
+            <td><input type="button" id="c2" class="btn ebc btn-warning" value="CONFIRM" style="display: none;"></td>
+            <td><div style="color:red;" id="err2"></div></td>
+        </tr>
+
+        <tr class="table-primary">
+            <td>ISBN:</td>
+            <td><input id="i3" type="text" name="isbn" value="{{book.isbn}}" disabled></td>
+            <td><input type="button" id="e3" class="btn ebn btn-success" value="EDIT"></td>
+            <td><input type="button" id="c3" class="btn ebc btn-warning" value="CONFIRM" style="display: none;"></td>
+            <td><div style="color:red;" id="err3"></div></td>
+        </tr>
+
+        <tr class="table-warning">
+            <td>LANGUAGE:</td>
+            <td><input id="i4" type="text" name="language" value="{{book.language}}" disabled></td>
+            <td><input type="button" id="e4" class="btn ebn btn-success" value="EDIT"></td>
+            <td><input type="button" id="c4" class="btn ebc btn-warning" value="CONFIRM" style="display: none;"></td>
+            <td><div style="color:red;" id="err4"></div></td>
+        </tr>
+
+        <tr class="table-primary">
+            <td>PUBLISHER:</td>
+            <td><input id="i5" type="text" name="publisher" value="{{book.publisher}}" disabled></td>
+            <td><input type="button" id="e5" class="btn ebn btn-success" value="EDIT"></td>
+            <td><input type="button" id="c5" class="btn ebc btn-warning" value="CONFIRM" style="display: none;"></td>
+            <td><div style="color:red;" id="err5"></div></td>
+        </tr>
+
+        <tr class="table-warning">
+            <td>AUTHOR:</td>
+            <td><input id="i6" type="text" name="author" value="{{book.author}}" disabled></td>
+          <td><input type="button" id="e6" class="btn ebn btn-success" value="EDIT"></td>
+            <td><input type="button" id="c6" class="btn ebc btn-warning" value="CONFIRM" style="display: none;"></td>
+            <td><div style="color:red;" id="err6"></div></td>
+        </tr>
+
+        <tr class="table-primary">
+            <td>MRP(in rupees):</td>
+            <td><input id="i7" type="text" name="mrp" value="{{book.mrp}}" disabled></td>
+           <td><input type="button" id="e7" class="btn ebn btn-success" value="EDIT"></td>
+            <td><input type="button" id="c7" class="btn ebc btn-warning" value="CONFIRM" style="display: none;"></td>
+            <td><div style="color:red;" id="err7"></div></td>
+        </tr>
+
+        <tr class="table-warning">
+            <td>PUBLISH YEAR:</td>
+            <td><input id="i8" type="text" name="publishYear" value="{{book.publishYear}}" disabled></td>
+            <td><input type="button" id="e8" class="btn ebn btn-success" value="EDIT"></td>
+            <td><input type="button" id="c8" class="btn ebc btn-warning" value="CONFIRM" style="display: none;"></td>
+            \<td><div style="color:red;" id="err8"></div></td>
+        </tr>
+
+        <tr class="table-primary">
+            <td>QUANTITY</td>
+            <td><input id="i15" type="text" name="quantity" value="{{book.quantity}}" disabled></td>
+            <td><input type="button" id="e15" class="btn ebn btn-success" value="EDIT"></td>
+           <td><input type="button" id="c15" class="btn ebc btn-warning" value="CONFIRM" style="display: none;"></td>
+            <td><div style="color:red;" id="err15"></div></td>
+        </tr>
+
+
+        <tr class="table-primary">
+            <td>QUANTITY AVAILABLE:</td>
+            <td><input id="i9" type="text" name="availqty" value="{{book.availableQuantity}}" disabled></td>
+            <td><input type="button" id="e9" class="btn ebn btn-success" value="EDIT"></td>
+           <td><input type="button" id="c9" class="btn ebc btn-warning" value="CONFIRM" style="display: none;"></td>
+            <td><div style="color:red;" id="err9"></div></td>
+        </tr>
+
+        <tr class="table-warning">
+            <td>DESCRIPTION:</td>
+            <td><textarea id="i10" name="description" disabled>{{book.description}}</textarea></td>
+            <td><input type="button" id="e10" class="btn ebn btn-success" value="EDIT"></td>
+            <td><input type="button" id="c10" class="btn ebc btn-warning" value="CONFIRM" style="display: none;"></td>
+            <td><div style="color:red;" id="err10"></div></td>
+        </tr>
+
+        <tr class="table-primary">
+            <td>FOR SALE:</td>
+        <td><input type="radio" disabled name="sale" value="yes" id="genm">Yes&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <input type="radio" disabled name="sale" value="no" id="genf">No
+        <div class="err1" style="color:red;"></div>
+        </td>
+
+      <td><input type="button" id="e14" class="btn ebs btn-success" value="EDIT"></td>
+            <td><input type="button" id="c14" class="btn ebc btn-warning" value="CONFIRM" style="display: none;"></td>
+            <td><div style="color:red;" id="err14"></div></td>
+        </tr>
+
+        <tr class="table-warning">
+            <td>Category:</td>
+            <td><input type="text" id="i12" name="category" value="{{book.category}}" disabled></td>
+        <td><input type="button" id="e12" class="btn ebn btn-success" value="EDIT"></td>
+            <td><input type="button" id="c12" class="btn ebc btn-warning" value="CONFIRM" style="display: none;"></td>
+            <td><div style="color:red;" id="err12"></div></td>
+        </tr>
+        <tr class="table-primary">
+            <td>RATING:</td>
+            <td><input type="text" name="rating" id="i11" value="{{book.rating}}" disabled></td>
+            <td><input type="button" id="e11" class="btn ebn btn-success" value="EDIT"></td>
+            <td><input type="button" id="c11" class="btn ebc btn-warning" value="CONFIRM" style="display: none;"></td>
+            <td><div style="color:red;" id="err11"></div></td>
+        </tr>
+    </table>
+    <br><br>
+    <!--Upload Image :<input type="text" id="i13" value="{{book.image}}" disabled>-->
+        <!--<td><input type="button" id="e13" class="btn ebi btn-success" value="EDIT"></td>-->
+        <!--<div id="image13" style="display: none;">{{form.image}}</div>-->
+      <!--<td><input type="button" id="c13" class="btn ebc btn-warning" value="CONFIRM" style="display: none;"></td>-->
+    <input type="hidden" id="user" name="username" value="{{username}}">
+        <br><br>
+        <div id="upderr" style="color:red"></div>
+        <button type="submit" class="btn btn-warning" id="updt">UPDATE</button>
+    </form>
+    </center>
+</div>
+<br><br>
+{% endblock %}
+{% block js %}
+<script>
+        $(function(){
+
+         var $mrp=/^[0-9]{1,}$/;
+      var $quantity=/^[0-9]{1,}$/;
+
+        if ('{{book.forSale}}' == 'yes')
+            {
+                $('#genm').prop("checked",true);
+            }
+            else{
+                $('#genf').prop("checked",true);
+            }
+
+
+        $('#c7').click(function(){
+            if(!$('#i7').val().match($mrp))
+            {
+            $('#err7').text('Please enter a valid price')
+            }
+            else{
+            $('#err7').text('');
+             $('#i7').prop("disabled",true);
+
+                $('#c7').css("display","none");
+                 $('#e7').css("display","block");
+            }
+            });
+
+            $('#c15').click(function(){
+            if(!$('#i15').val().match($mrp))
+            {
+            $('#err15').text('Please enter a valid quantity')
+            }
+            else{
+            $('#err15').text('');
+             $('#i15').prop("disabled",true);
+
+                $('#c15').css("display","none");
+                 $('#e15').css("display","block");
+            }
+            });
+
+              $('#c9').click(function(){
+            if(!$('#i9').val().match($quantity))
+            {
+            $('#err9').text('Please enter a valid quantity')
+            }
+            else{
+            $('#err9').text('');
+             $('#i9').prop("disabled",true);
+
+                $('#c9').css("display","none");
+                 $('#e9').css("display","block");
+            }
+            });
+
+            $('.ebn').click(function(){
+
+               var eid=this.id.toString().slice(1,);
+                console.log(eid)
+                $('#'+'i'+eid).prop("disabled",false);
+                $('#'+'e'+eid).css("display","none");
+                $('#'+'c'+eid).css("display","block");
+
+
+
+
+            });
+
+             $('.ebc').click(function(){
+
+               var eid=this.id.toString().slice(1,);
+                console.log(eid)
+                if(eid!='9' && eid!='7' && eid!='15')
+                {
+                if($('#'+'i'+eid).val()=="" )
+
+                {
+                $('#err'+eid).text('Please enter some value')
+                 return false
+                }
+                else{
+                $('#err'+eid).text('')
+                $('#'+'i'+eid).prop("disabled",true);
+
+                $('#'+'c'+eid).css("display","none");
+                 $('#'+'e'+eid).css("display","block");
+                 }
+                 }
+                 });
+
+
+
+            $('.ebs').click(function(){
+                $('#genm,#genf').prop("disabled",false);
+                $('#e14').css("display","none");
+                $('#c14').css("display","block");
+            });
+
+             $('#c14').click(function(){
+                $('#genm,#genf').prop("disabled",true);
+                $('#c14').css("display","none");
+                $('#e14').css("display","block");
+
+            });
+
+            //$('#e13').click(function(){
+              //  $('#image13').prop("hidden",false);
+                //$('#e13')..css("display","block");
+                //$('#c13').css("display","none");
+                //});
+
+
+
+            //$('#c13').click(function(){
+              //  $('#image13')..css("display","block"));
+                //   $('#c13')..css("display","block");
+                //$('#e13').css("display","none");
+                //console.log('{{form.image}}')
+                //});
+
+                  $('#updt').click(function(){
+                if(!($('#c1').is(':hidden') && $('#c2').is(':hidden') && $('#c3').is(':hidden') && $('#c4').is(':hidden') && $('#c5').is(':hidden') && $('#c6').is(':hidden') && $('#c7').is(':hidden') && $('#c8').is(':hidden') && $('#c9').is(':hidden') && $('#c10').is(':hidden') && $('#c11').is(':hidden') && $('#c12').is(':hidden') && $('#c15').is(':hidden') && $('#c14').is(':hidden')))
+                {
+                 $('#upderr').text('Please conform all your updates before updating your profile');
+                  return false;
+                }
+                else{
+                $('#upderr').text('');
+                 alert("updated succesfully")
+                $('#i1,#i2,#i3,#i4,#i5,#i6,#i7,#i8,#i9,#i10,#i11,#genm,#genf,#geno,#i14,#i15,#i12').prop("disabled",false);
+                 }
+
+
+
+            });
+
+    $('#emp_logout').click(function(){
+localStorage.removeItem('cart','chkcart');
+
+})
+
+window.onunload=function(){
+localStorage.removeItem('cart','chkcart');
+}
+
+
+            });
+
+</script>
+{% endblock %}

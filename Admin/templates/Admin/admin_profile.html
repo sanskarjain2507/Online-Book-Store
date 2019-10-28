@@ -1,0 +1,197 @@
+{% extends 'base.html' %}
+{% block title %}Profile{% endblock %}
+{% block nav_title %} WELCOME {{username}} {% endblock %}
+{% block nav_items %}
+
+<div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+
+    <ul class="navbar-nav">
+        <li>
+         <form method="post" action="/admin_login/after_login">
+             {% csrf_token %}
+             <input type="hidden" value="{{role}}" name="role">
+             <input type="hidden" value="{{username}}" name="username">
+             <button style="background-color:transparent; border:0;" class="nav-link">Home</button>
+         </form>
+        </li>
+
+        <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle active"  id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">More Options</a>
+            <div class="dropdown-menu bg-dark" aria-labelledby="navbarDropdownMenuLink">
+                 <a class="dropdown-item bg-dark">
+                   <form method="post" action="/admin_login/view_profile">
+                        {% csrf_token %}
+                       <input type="hidden" value="{{role}}" name="role">
+                       <input type="hidden" value="{{username}}" name="username">
+                       <button style="background-color:transparent; border:0;" class="nav-link active">My Profile</button>
+                   </form>
+                 </a>
+
+                 <a class="dropdown-item bg-dark">
+                     <form method="post" action="/admin_login/change_password">
+                               {% csrf_token %}
+                         <input type="hidden" value="{{role}}" name="role">
+                         <input type="hidden" name="username" value="{{username}}">
+                         <button style="background-color:transparent; border:0;" class="nav-link" id="chngpass">Change Password</button>
+                     </form>
+                 </a>
+
+                 <a class="dropdown-item bg-dark">
+                    <form method="post" action="/employee_login/register">
+                              {% csrf_token %}
+                        <input type="hidden" value="{{role}}" name="role">
+                        <input type="hidden" name="username" value="{{username}}">
+                        <button type="submit" class="nav-link" style="background-color:transparent; border:0;"> Register Employee</button>
+                    </form>
+                 </a>
+
+                 <a class="dropdown-item bg-dark">
+                     <form method="post" action="/admin_login/view_orders">
+                               {% csrf_token %}
+                         <input type="hidden" value="{{role}}" name="role">
+                         <button type="submit" style="background-color:transparent; border:0;" id="view_orders" class="nav-link">View orders</button>
+                         <input type="hidden" value="{{username}}" name="username">
+                     </form>
+                 </a>
+
+                 <a class="dropdown-item bg-dark">
+                     <form method="post" action="/admin_login/view_feedbacks">
+                               {% csrf_token %}
+                         <input type="hidden" value="{{role}}" name="role">
+                         <button type="submit" style="background-color:transparent; border:0;" id="view_feedback" class="nav-link">Feedbacks</button>
+                         <input type="hidden" value="{{username}}" name="username">
+                     </form>
+                 </a>
+            </div>
+        </li>
+
+        <li class="nav-item">
+            <form method="post" action="/admin_login/view_employees">
+                           {% csrf_token %}
+                <input type="hidden" value="{{role}}" name="role">
+                <input type="hidden" name="username" value="{{username}}">
+                <button style="background-color:transparent; border:0;" class="nav-link" id="emp_info">Employees Info</button>
+            </form>
+        </li>
+
+        <li class="nav-item">
+              <form method="post" action="/admin_login/about_us">
+                        {% csrf_token %}
+                  <input type="hidden" value="{{role}}" name="role">
+                  <input type="hidden" value="{{username}}" name="username">
+                 <button type="submit" class="nav-link" style="background-color:transparent; border:0;">About</button>
+              </form>
+        </li>
+
+        <li class="nav-item">
+              <form method="post" action="/admin_login/contact_us">
+                        {% csrf_token %}
+                  <input type="hidden" value="{{role}}" name="role">
+                  <input type="hidden" value="{{username}}" name="username">
+                <button type="submit" class="nav-link" style="background-color:transparent; border:0;">Contact Us</button>
+              </form>
+        </li>
+
+        <li class="nav-item">
+                 <form method="post" action="/customer_login/user_logout">
+                           {% csrf_token %}
+                     <input type="hidden" value="{{role}}" name="role">
+                     <input type="hidden" value="{{username}}" name="username">
+                     <button class="nav-link" style="background-color:transparent; border:0;"  id="emp_logout">Logout</button>
+                 </form>
+        </li>
+    </ul>
+</div>
+{% endblock %}
+{% block body %}
+<div class="container-fluid">
+    <center>
+        <h1><span class="badge badge-secondary">Profile</span></h1>
+        <br><br>
+ <table style="border:0;">
+        <tr class="table">
+            <th>Admin ID:</th>
+            <td><div id="i1" >{{adm.id}}</div></td>
+            </tr>
+
+      <tr class="table">
+            <th>Full Name:</th>
+          <td><div id="i2">{{adm.firstName}} {{adm.middleName}} {{adm.lastName}}</div></td>
+            </tr>
+
+        <tr class="table">
+            <th>Mobile Number:</th>
+            <td><div id="i3" >{{adm.mobileNo}}</div></td>
+            </tr>
+
+
+
+        <tr class="table">
+            <th>Age:</th>
+            <td><div id="i5">{{adm.age}}</div></td>
+            </tr>
+
+        <tr class="table">
+            <th>Email Address:</th>
+            <td><div id="i6">{{adm.emailAdd}}</div></td>
+            </tr>
+
+        <tr class="table">
+            <th>Temporary Address:</th>
+            <td><div id="i7">{{adm.temporaryAddress}}</div></td>
+            </tr>
+
+          <tr class="table">
+            <th>Pincode:</th>
+            <td><div id="i8">{{adm.tPincode}}</div></td>
+            </tr>
+
+       <tr class="table">
+            <th>Permanent Address:</th>
+            <td><div id="i9">{{adm.permanentAddress}}</div></td>
+            </tr>
+
+          <tr class="table">
+            <th>Pincode:</th>
+            <td><div id="i10">{{adm.pPincode}}</div></td>
+            </tr>
+
+
+          <tr class="table">
+            <th>Gender:</th>
+            <td><div id="i11">{{adm.gender}}</div></td>
+            </tr>
+
+
+
+        <tr class="table">
+            <th>Experience:</th>
+            <td><div id="i13">{{adm.experience}}</div></td>
+            </tr>
+    </table>
+        <hr>
+
+
+        <br>
+        <form method="post" action="/admin_login/update_admin">
+                  {% csrf_token %}<input type="hidden" value="{{role}}" name="role">
+            <input type="hidden" value="{{username}}" name="username">
+            <button class="btn btn-warning" type="submit">Update</button>
+        </form>
+    </center>
+    </div>
+<br><br>
+
+{% endblock %}
+{% block js %}
+<script>
+    $('#emp_logout').click(function(){
+localStorage.removeItem('cart','chkcart');
+
+})
+
+window.onunload=function(){
+localStorage.removeItem('cart','chkcart');
+}
+</script>
+{% endblock %}

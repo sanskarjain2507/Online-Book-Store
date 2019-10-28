@@ -1,0 +1,456 @@
+{% extends 'base.html' %}
+{% block title %}My Cart{% endblock %}
+{% block nav_title %} WELCOME {{username}} {% endblock %}
+{% block nav_items %}
+<div class="collapse navbar-collapse justify-content-end sticky-top" id="navbarNav">
+    <ul class="navbar-nav">
+        <li class="nav-item">
+            <form method="post" action="/customer_login/after_login">
+                    {% csrf_token %}
+                <input type="hidden" value="{{role}}" name="role">
+                <input type="hidden" value="{{username}}" name="username">
+                <button style="background-color:transparent; border:0;" class="nav-link">Home</button>
+             </form>
+        </li>
+
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle"  id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">More Options</a>
+           <div class="dropdown-menu bg-dark" aria-labelledby="navbarDropdownMenuLink">
+
+            <a class="dropdown-item bg-dark">
+                <form method="post" action="/customer_login/cust_profile">
+                    {% csrf_token %}
+                    <input type="hidden" value="{{role}}" name="role">
+                    <input type="hidden" value="{{username}}" name="username">
+                    <button style="background-color:transparent; border:0;" class="nav-link">My Profile</button>
+                </form>
+            </a>
+
+            <a class="dropdown-item bg-dark">
+                <form method="post" action="/customer_login/change_password">
+                    {% csrf_token %}
+                    <input type="hidden" value="{{role}}" name="role">
+                    <input type="hidden" name="username" value="{{username}}">
+                    <button style="background-color:transparent; border:0;" class="nav-link" id="chngpass">Change Password</button>
+                </form>
+            </a>
+
+            <a class="dropdown-item bg-dark">
+                 <form method="post" action="/customer_login/cust_feedback">
+                       {% csrf_token %}
+                     <input type="hidden" value="{{role}}" name="role">
+                     <input type="hidden" value="{{username}}" name="username">
+                     <button style="background-color:transparent; border:0;" class="nav-link">Give Feedback</button>
+                 </form>
+            </a>
+
+           </div>
+        </li>
+
+
+        <li class="nav-items">
+            <form method="post" action="/cart/cart_orders">
+                      {% csrf_token %}
+                <input type="hidden" value="{{role}}" name="role">
+                <input type="hidden" value="{{username}}" name="username">
+                <button type="submit" class="btn btn-warning" >My Cart</button>
+            </form>
+        </li> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+        <li class="nav-item">
+          <form method="post" action="/customer_login/about_us">
+                    {% csrf_token %}
+              <input type="hidden" value="{{role}}" name="role">
+              <input type="hidden" value="{{username}}" name="username">
+            <button type="submit" class="nav-link" style="background-color:transparent; border:0;">About</button>
+          </form>
+        </li>
+
+        <li class="nav-item">
+          <form method="post" action="/customer_login/contact_us">
+                    {% csrf_token %}
+              <input type="hidden" value="{{role}}" name="role">
+              <input type="hidden" value="{{username}}" name="username">
+              <button type="submit" class="nav-link" style="background-color:transparent; border:0;">Contact Us</button>
+          </form>
+        </li>
+
+        <li class="nav-item">
+            <form method="post" action="/customer_login/user_logout">
+                       {% csrf_token %}
+                <input type="hidden" value="{{role}}" name="role">
+                <button  type="submit" class="nav-link" id="cust_logout" style="background-color:transparent; border:0;">Logout</button>
+                <input type="hidden" value="{{username}}" name="username">
+            </form>
+        </li>
+
+   </ul>
+</div>
+{% endblock %}
+{% block body %}
+<div>
+<center>
+    <div id="items"></div>
+ <form method="post" action="/cart/chkout_info">{% csrf_token %}<input type="hidden" value="{{role}}" name="role">
+        <input type="hidden" value="{{username}}" name="username">
+  <button type="submit" class="btn btn-primary" id="chkout">Checkout</button>
+    </form><br><br>
+  <div class="alert alert-success errmsg" hidden>The following products are not available in that much quantity as required by you.Please either decrease your quantity or buy them after some time.<br>Thank you.</div>
+
+    <div id="unavlitems"></div>
+
+</center>
+  <br><br>
+</div>
+{% endblock %}
+{% block js %}
+<script>
+
+$(function(){
+if (localStorage.getItem('cart') == null) {
+    var cart = {};
+} else {
+    cart = JSON.parse(localStorage.getItem('cart'));
+
+}
+console.log(cart);
+
+
+var sum = 0;
+var f=0;
+var chkcart={};
+
+for(item in cart){
+if(cart[item][0] > parseInt(cart[item][7]))
+{
+$('.errmsg').prop('hidden',false);
+break;
+}
+}
+
+for(item in cart)
+{
+if(cart[item][5]=='{{username}}'){
+f=1;
+break;
+}
+}
+if ($.isEmptyObject(cart) || f==0) {
+    //if object is empty
+    mystr = `<p>Your cart is empty, please add some items to your cart before checking out!</p>`
+    $('#items').append(mystr);
+    $('#chkout').hide();
+} else {
+
+    for (item in cart) {
+        if(cart[item][5]=='{{username}}' && cart[item][6] >=0)
+        {
+        let name = cart[item][1];
+        let qty = cart[item][0];
+        sum = sum + qty;
+        mystr = `<div class="container">
+    <div class="border border-warning rounded pb-5" style="background-color:orange; opacity:.9;">
+    <div class="row">
+      <div class="col">
+    <img src="${cart[item][2]}" height="200px" width="200px" style=" padding-left:10px; padding-top:10px; padding-bottom:10px;">
+    </div>
+    <div class="col">
+        <table>
+            <tr>
+                <th>Title:</th>
+                <td>${cart[item][1]}</td>
+            </tr>
+
+             <tr>
+                <th>Price:</th>
+                <th>${cart[item][3]}/-</th>
+            </tr>
+
+             <tr>
+                <th>Book Id:</th>
+                <td>${cart[item][4]}</td>
+            </tr>
+
+             <tr>
+                <th>Quantity</th>
+                <td><button class="btn btn-primary increment" id='inr${cart[item][4]}'>+</button>&nbsp;<span id='sp${cart[item][4]}'>${cart[item][0]}</span>&nbsp;<button class="btn btn-primary decrement" id='dec${cart[item][4]}'>-</button></td>
+
+            </tr>
+        </table>
+    </div>
+    </div>
+    <button type="submit" class="rem btn btn-danger" id='rm${cart[item][4]}'>Remove product</button>
+
+   </div>
+    <br><br>
+ </div>
+
+`
+        $('#items').append(mystr);
+        console.log(qty)
+    }
+    }
+
+ for (item in cart) {
+ if(cart[item][5]=='{{username}}' && cart[item][6] <0)
+        {
+         let name = cart[item][1];
+        let qty = cart[item][0];
+        mystr = `<div class="container">
+    <div class="border border-warning rounded pb-5" style="background-color:orange; opacity:.9;">
+    <div class="row">
+      <div class="col">
+    <img src="${cart[item][2]}" height="200px" width="200px" style=" padding-left:10px; padding-top:10px; padding-bottom:10px;">
+    </div>
+    <div class="col">
+        <table>
+            <tr>
+                <th>Title:</th>
+                <td>${cart[item][1]}</td>
+            </tr>
+
+             <tr>
+                <th>Price:</th>
+                <th>${cart[item][3]}/-</th>
+            </tr>
+
+             <tr>
+                <th>Book Id:</th>
+                <td>${cart[item][4]}</td>
+            </tr>
+
+             <tr>
+                <th>Quantity</th>
+                <td><button class="btn btn-primary increment" id='inr${cart[item][4]}'>+</button>&nbsp;<span id='sp${cart[item][4]}'>${cart[item][0]}</span>&nbsp;<button class="btn btn-primary decrement" id='dec${cart[item][4]}'>-</button></td>
+
+            </tr>
+
+             <tr>
+                <th>Availble Quantity:</th>
+                <td>${cart[item][7]}</td>
+            </tr>
+        </table>
+    </div>
+    </div>
+    <button type="submit" class="rem btn btn-danger" id='rm${cart[item][4]}'>Remove product</button>
+   </div>
+    <br><br>
+ </div>
+ `
+  $('#unavlitems').append(mystr);
+        console.log(qty)
+}
+}
+}
+
+for (item in cart){
+if(cart[item][5]=='{{username}}')
+{
+if (cart[item][0]<=1)
+{
+$('#dec'+cart[item][4]).attr('disabled',true);
+}
+}
+}
+
+$('.increment').on('click',function(){
+cart=JSON.parse(localStorage.getItem('cart'));
+var icrid=this.id.toString();
+var id=icrid.slice(3,);
+
+var cart1={};
+cart1=cart;
+cart={};
+console.log(cart1)
+var l=0;
+for(item in cart1){ l++}
+console.log(l)
+for( item in cart1){
+if(cart1[item][4]!=id){
+    item1=[]
+    item1=cart1[item]
+    console.log(item1)
+    item1[0]=cart1[item][0]
+    item1[1]=cart1[item][1]
+    item1[2]=cart1[item][2]
+    item1[3]=cart1[item][3]
+    item1[4]=cart1[item][4]
+    item1[5]=cart1[item][5]
+    item1[6]=cart1[item][6]
+    item1[7]=cart1[item][7]
+    cart[item]=item1;
+    console.log(item1)
+
+}
+else if(cart1[item][4]==id){
+item1=[]
+    item1=cart1[item]
+    console.log(item1)
+    item1[0]=cart1[item][0]+1
+    item1[6]=cart1[item][6]-1
+    $('#sp'+id).html(item1[0]);
+     if(item1[0]>1 && item1[6]>0){
+    $('#dec'+id).attr('disabled',false);
+    }
+    item1[1]=cart1[item][1]
+    item1[2]=cart1[item][2]
+    item1[3]=cart1[item][3]
+    item1[4]=cart1[item][4]
+    item1[5]=cart1[item][5]
+    item1[7]=cart1[item][7]
+    cart[item]=item1;
+     if(item1[0]==(parseInt(item1[7])+1)){
+
+    document.location.reload();
+    }
+}
+}
+localStorage.setItem('cart',JSON.stringify(cart));
+
+});
+
+$('.decrement').on('click',function(){
+cart=JSON.parse(localStorage.getItem('cart'));
+var decid=this.id.toString();
+var id=decid.slice(3,);
+var cart1={};
+cart1=cart;
+cart={};
+console.log(cart1)
+var l=0;
+for(item in cart1){ l++}
+console.log(l)
+for( item in cart1){
+if(cart1[item][4]!=id){
+    item1=[]
+    item1=cart1[item]
+    console.log(item1)
+    item1[0]=cart1[item][0]
+    item1[1]=cart1[item][1]
+    item1[2]=cart1[item][2]
+    item1[3]=cart1[item][3]
+    item1[4]=cart1[item][4]
+    item1[5]=cart1[item][5]
+    item1[6]=cart1[item][6]
+    item1[7]=cart1[item][7]
+    cart[item]=item1;
+    console.log(item1)
+
+}
+else if(cart1[item][4]==id){
+item1=[]
+    item1=cart1[item]
+    console.log(item1)
+    item1[0]=cart1[item][0]-1
+    item1[6]=cart1[item][6]+1
+    $('#sp'+id).html(item1[0]);
+    if(item1[0]<=1){
+    $('#dec'+id).attr('disabled',true);
+    }
+    item1[1]=cart1[item][1]
+    item1[2]=cart1[item][2]
+    item1[3]=cart1[item][3]
+    item1[4]=cart1[item][4]
+    item1[5]=cart1[item][5]
+    item1[7]=cart1[item][7]
+    cart[item]=item1;
+    if(item1[0]==item1[7]){
+    document.location.reload();
+    }
+}
+}
+localStorage.setItem('cart',JSON.stringify(cart));
+});
+
+$('.rem').on('click',function(){
+localStorage.removeItem("cart");
+console.log(localStorage.getItem('cart'))
+console.log('ya')
+var item = this.id.toString()
+a = item.slice(2,);
+console.log(item)
+console.log(a)
+var cart1={};
+cart1=cart;
+cart={};
+console.log(cart1)
+var l=0;
+for(item in cart1){ l++}
+console.log(l)
+for( item in cart1){
+if(cart1[item][4]!=a){
+    item1=[]
+    item1=cart1[item]
+    console.log(item1)
+    item1[0]=cart1[item][0]
+    item1[1]=cart1[item][1]
+    item1[2]=cart1[item][2]
+    item1[3]=cart1[item][3]
+    item1[4]=cart1[item][4]
+    item1[5]=cart1[item][5]
+    item1[6]=cart1[item][6]
+    item1[7]=cart1[item][7]
+    cart[item]=item1;
+    console.log(item1)
+
+}
+
+
+console.log(item)
+
+localStorage.setItem('cart',JSON.stringify(cart));
+console.log(localStorage.getItem('cart'))
+
+console.log(cart[a])
+document.location.reload();
+}
+
+});
+
+if (localStorage.getItem('cart') == null) {
+    var cart = {};
+} else {
+    cart = JSON.parse(localStorage.getItem('cart'));
+
+}
+
+window.onunload=function(){
+for(item in cart){
+if(cart[item][0]<=parseInt(cart[item][7])){
+ item1=[]
+    item1=cart[item]
+    console.log(item1)
+    item1[0]=cart[item][0]
+    item1[1]=cart[item][1]
+    item1[2]=cart[item][2]
+    item1[3]=cart[item][3]
+    item1[4]=cart[item][4]
+    item1[5]=cart[item][5]
+    item1[6]=cart[item][6]
+    item1[7]=cart[item][7]
+    chkcart[item]=item1;
+
+}
+
+}
+localStorage.setItem('chkcart',JSON.stringify(chkcart));
+}
+
+
+
+$('#cust_logout').click(function(){
+localStorage.removeItem('cart','chkcart');
+
+})
+
+//window.onunload=function(){
+//localStorage.removeItem('cart','chkcart');
+//}
+});
+
+
+
+
+</script>
+{% endblock %}
+

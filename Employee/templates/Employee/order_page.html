@@ -1,0 +1,164 @@
+{% extends 'base.html' %}
+{% block title %}Orders Page{% endblock %}
+{% block nav_title %} WELCOME {{username}} {% endblock %}
+{% block nav_items %}
+<div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+    <ul class="navbar-nav">
+        <li>
+            <form method="post" action="/employee_login/after_login">
+                    {% csrf_token %}
+                <input type="hidden" value="{{role}}" name="role">
+                <input type="hidden" value="{{username}}" name="username">
+                <button style="background-color:transparent; border:0;" class="nav-link">Home</button>
+            </form>
+        </li>
+
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle"  id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">More Options</a>
+            <div class="dropdown-menu bg-dark" aria-labelledby="navbarDropdownMenuLink">
+
+                 <a class="dropdown-item bg-dark">
+                    <form method="post" action="/employee_login/emp_profile_show">
+                        {% csrf_token %}
+                        <input type="hidden" value="{{role}}" name="role">
+                        <input type="hidden" value="{{username}}" name="username">
+                        <button style="background-color:transparent; border:0;" class="nav-link">My Profile</button>
+                    </form>
+                 </a>
+
+                 <a class="dropdown-item bg-dark">
+                    <form method="post" action="/employee_login/change_password">
+                       {% csrf_token %}
+                        <input type="hidden" value="{{role}}" name="role">
+                        <input type="hidden" name="username" value="{{username}}">
+                        <button style="background-color:transparent; border:0;" class="nav-link" id="chngpass">Change Password</button>
+                    </form>
+                 </a>
+
+                 <a class="dropdown-item bg-dark">
+                     <form method="post" action="/employee_login/delivered_orders">
+                       {% csrf_token %}
+                       <input type="hidden" value="{{role}}" name="role">
+                       <input type="hidden" value="{{username}}" name="username">
+                       <button type="submit" style="background-color:transparent; border:0;" class="nav-link"  id="delivered_orders">View Delivered Orders</button>
+                     </form>
+                 </a>
+
+            </div>
+        </li>
+
+        <li class="nav-item">
+             <form method="post" action="/employee_login/orders">
+                 {% csrf_token %}
+                 <input type="hidden" value="{{role}}" name="role">
+                 <button type="submit" style="background-color:transparent; border:0;" id="view_orders" class="nav-link active">View Orders</button>
+                 <input type="hidden" value="{{username}}" name="username">
+             </form>
+        </li>
+
+        <li class="nav-item">
+             <form method="post" action="/books/add_book">
+                 {% csrf_token %}
+                 <input type="hidden" value="{{role}}" name="role">
+                 <input type="hidden" name="username" value="{{username}}">
+                 <button style="background-color:transparent; border:0;" class="nav-link"  id="add_book">Add Book</button>
+             </form>
+        </li>
+
+        <li class="nav-item">
+            <form method="post" action="/employee_login/about_us">
+                {% csrf_token %}
+                <input type="hidden" value="{{role}}" name="role">
+                <input type="hidden" value="{{username}}" name="username">
+                <button type="submit" class="nav-link" style="background-color:transparent; border:0;">About</button>
+            </form>
+        </li>
+
+        <li class="nav-item">
+            <form method="post" action="/employee_login/contact_us">
+                {% csrf_token %}
+                <input type="hidden" value="{{role}}" name="role">
+                <input type="hidden" value="{{username}}" name="username">
+                <button type="submit" class="nav-link" style="background-color:transparent; border:0;">Contact Us</button>
+            </form>
+        </li>
+
+        <li class="nav-item">
+             <form method="post" action="/customer_login/user_logout">
+                 {% csrf_token %}
+                 <input type="hidden" value="{{role}}" name="role">
+                 <input type="hidden" value="{{username}}" name="username">
+                 <button class="nav-link" style="background-color:transparent; border:0;"  id="emp_logout">Logout</button>
+             </form>
+        </li>
+   </ul>
+</div>
+{% endblock %}
+{% block body %}
+<h1><center><b><u>ORDER DETAILS</u></b></center></h1>
+<br><br>
+  <div class="container">
+
+    <div class="row">
+      <!--<div class="col">-->
+    <!--<img src="/media/{{product.img}}" height="200px" width="200px" style=" padding-left:10px; padding-top:10px; padding-bottom:10px;">-->
+    <!--</div>-->
+    <div class="col">
+        <table class="table">
+
+            <thead class="thead-dark">
+            <tr>
+                <th scope="col">EMAIL</th>
+                <th scope="col">ORDER ID</th>
+                <th scope="col">ORDER NAME</th>
+                <th scope="col">QUANTITY</th>
+                <th scope="col">ADDRESS</th>
+                {% if status == 'on order' %}
+                <th scope="col">ACTION</th>
+                {% endif %}
+            </tr>
+            </thead>
+            <tbody>
+           {% for order in orders %}
+             <tr>
+                 <th scope="row">{{order.email}}</th>
+                <td>{{order.orderId}}</td>
+                <td>{{order.orderName}}</td>
+                <td>{{order.quantity}}</td>
+                <td>{{order.address}}</td>
+              {% if order.status == 'on order' %}
+                 <td>
+
+                     <form method="post" action="/employee_login/on_shipping">
+                               {% csrf_token %}<input type="hidden" value="{{role}}" name="role">
+                         <input type="hidden" value="{{username}}" name="username">
+                         <input type="hidden" value="{{order.orderId}}+{{order.orderName}}" name="odr">
+    <button type="submit" class="btn btn-danger">Conform Shipping</button>
+</form>
+
+                 </td>
+                 {% endif %}
+            </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    </div>
+
+
+
+    <br><br>
+ </div>
+{% endblock %}
+{% block js %}
+<script>
+        $('#emp_logout').click(function(){
+localStorage.removeItem('cart','chkcart');
+
+})
+
+window.onunload=function(){
+localStorage.removeItem('cart','chkcart');
+}
+</script>
+{% endblock %}

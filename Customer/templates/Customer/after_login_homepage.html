@@ -1,0 +1,126 @@
+{% extends 'base.html' %}
+{% block title %} Homepage{% endblock %}
+{% block nav_title %} WELCOME {{username}} {% endblock %}
+{% block nav_items %}
+<div class="collapse navbar-collapse" id="navbarNav">
+    <ul class="navbar-nav">
+      <li class="nav-item active">
+        <a class="nav-link" href="#"> <span class="sr-only">(current)</span></a>
+      </li>
+             <li class="nav-item">
+          <form method="post" action="/customer_login/after_login">
+                    {% csrf_token %}<input type="hidden" value="{{role}}" name="role">
+            <input type="hidden" value="{{username}}" name="username">
+              <button style="background-color:transparent; border:0;" class="nav-link">Home</button>
+          </form>
+      </li>
+        <li class="nav-item">
+          <form method="post" action="/customer_login/cust_profile">
+                    {% csrf_token %}<input type="hidden" value="{{role}}" name="role">
+            <input type="hidden" value="{{username}}" name="username">
+              <button style="background-color:transparent; border:0;" class="nav-link">My Profile</button>
+          </form>
+      </li>
+       <li class="nav-item">
+          <form method="post" action="/customer_login/about_us">
+                    {% csrf_token %}<input type="hidden" value="{{role}}" name="role">
+              <input type="hidden" value="{{username}}" name="username">
+        <button type="submit" class="nav-link" style="background-color:transparent; border:0;">About</button>
+              </form>
+      </li>
+
+         <li class="nav-item">
+          <form method="post" action="/customer_login/contact_us">
+                    {% csrf_token %}<input type="hidden" value="{{role}}" name="role">
+              <input type="hidden" value="{{username}}" name="username">
+        <button type="submit" class="nav-link" style="background-color:transparent; border:0;">Contact Us</button>
+              </form>
+      </li>
+         <li class="nav-item">
+         <form method="post" action="/customer_login/user_logout">
+                   {% csrf_token %}<input type="hidden" value="{{role}}" name="role">
+        <button  type="submit" class="nav-lonk" id="cust_logout" style="background-color:transparent; border:0;">Logout</button>
+             <input type="hidden" value="{{username}}" name="username">
+                 </form>
+      </li>
+          <li class="nav-item">
+             <form method="post" action="/customer_login/change_password">
+                       {% csrf_token %}<input type="hidden" value="{{role}}" name="role">
+                 <input type="hidden" name="username" value="{{username}}">
+        <button style="background-color:transparent; border:0;" class="nav-link" id="chngpass">Change Password</button>
+     </form>
+  </li>
+        <li class="nav-items">
+            <form method="post" action="/cart/cart_orders">
+                      {% csrf_token %}<input type="hidden" value="{{role}}" name="role">
+                <input type="hidden" value="{{username}}" name="username">
+                <button type="submit" class="btn btn-warning" >My Cart</button>
+            </form>
+        </li>
+
+    </ul>
+  </div>
+{% endblock %}
+{% block body%}
+{% for product,cat in products %}
+
+<br>
+<center><div style="background-color:red; width:200px; border-radius:15px;"><u><h1 style="color:black;">{{cat}}</h1></u></div></center>
+<br><br>
+
+
+<div class="row mb-4 ml-4">
+{% for i in product%}
+<div class="col-xs-3 col-sm-3 col-md-3">
+<div class="card" style="width: 18rem; height:auto">
+  <img src="/media/{{i.image}}" class="card-img-top" alt="..." height="400px">
+  <div class="card-body">
+    <h5 class="card-title">{{i.title}}</h5>
+    <p class="card-text">{{i.description|slice:":150"}}...</p>
+      <form method="post" action="/books/description_view">
+                {% csrf_token %}<input type="hidden" value="{{role}}" name="role">
+    <button type="submit"  class="btn btn-primary">View</button>
+      <input type="hidden" value="{{i.id}}" name="bid">
+      </form>
+      <form method="post" action="/customer_login/add_to_cart">
+                {% csrf_token %}<input type="hidden" value="{{role}}" name="role">
+          <input type="hidden" value="{{i.id}}" name="bid">
+          <input type="hidden" value="{{username}}" name="username">
+      <button class="btn btn-warning" id="{{i.id}}">ADD TO CART</button>
+        </form>
+  </div>
+    </div>
+</div>
+        {% if forloop.counter|divisibleby:4 and not forloop.last %}
+        </div><div class="row mb-4 ml-4">
+        {% endif %}
+    {%endfor%}
+    </div>
+    {% endfor %}
+
+
+{% endblock %}
+{% block js %}
+<script>
+//localStorage.setItem('username','{{username}}');
+
+$(function()
+{
+
+
+
+
+
+
+
+     $('#cust_logout').click(function(){
+localStorage.removeItem('cart','chkcart');
+
+})
+
+//window.onunload=function(){
+//localStorage.removeItem('cart','chkcart');
+//}
+});
+</script>
+{% endblock %}

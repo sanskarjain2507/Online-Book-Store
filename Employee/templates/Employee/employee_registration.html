@@ -1,0 +1,365 @@
+{% extends 'base.html' %}
+{% block title %}Register Employee{% endblock %}
+{% block nav_title %} WELCOME {{username}} {% endblock %}
+{% block nav_items %}
+
+<div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+
+    <ul class="navbar-nav">
+        <li>
+         <form method="post" action="/admin_login/after_login">
+             {% csrf_token %}
+             <input type="hidden" value="{{role}}" name="role">
+             <input type="hidden" value="{{username}}" name="username">
+             <button style="background-color:transparent; border:0;" class="nav-link">Home</button>
+         </form>
+        </li>
+
+        <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle active"  id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">More Options</a>
+            <div class="dropdown-menu bg-dark" aria-labelledby="navbarDropdownMenuLink">
+                 <a class="dropdown-item bg-dark">
+                   <form method="post" action="/admin_login/view_profile">
+                        {% csrf_token %}
+                       <input type="hidden" value="{{role}}" name="role">
+                       <input type="hidden" value="{{username}}" name="username">
+                       <button style="background-color:transparent; border:0;" class="nav-link">My Profile</button>
+                   </form>
+                 </a>
+
+                 <a class="dropdown-item bg-dark">
+                     <form method="post" action="/admin_login/change_password">
+                               {% csrf_token %}
+                         <input type="hidden" value="{{role}}" name="role">
+                         <input type="hidden" name="username" value="{{username}}">
+                         <button style="background-color:transparent; border:0;" class="nav-link" id="chngpass">Change Password</button>
+                     </form>
+                 </a>
+
+                 <a class="dropdown-item bg-dark">
+                    <form method="post" action="/employee_login/register">
+                              {% csrf_token %}
+                        <input type="hidden" value="{{role}}" name="role">
+                        <input type="hidden" name="username" value="{{username}}">
+                        <button type="submit" class="nav-link active" style="background-color:transparent; border:0;"> Register Employee</button>
+                    </form>
+                 </a>
+
+                 <a class="dropdown-item bg-dark">
+                     <form method="post" action="/admin_login/view_orders">
+                               {% csrf_token %}
+                         <input type="hidden" value="{{role}}" name="role">
+                         <button type="submit" style="background-color:transparent; border:0;" id="view_orders" class="nav-link">View orders</button>
+                         <input type="hidden" value="{{username}}" name="username">
+                     </form>
+                 </a>
+
+                 <a class="dropdown-item bg-dark">
+                     <form method="post" action="/admin_login/view_feedbacks">
+                               {% csrf_token %}
+                         <input type="hidden" value="{{role}}" name="role">
+                         <button type="submit" style="background-color:transparent; border:0;" id="view_feedback" class="nav-link">Feedbacks</button>
+                         <input type="hidden" value="{{username}}" name="username">
+                     </form>
+                 </a>
+            </div>
+        </li>
+
+        <li class="nav-item">
+            <form method="post" action="/admin_login/view_employees">
+                           {% csrf_token %}
+                <input type="hidden" value="{{role}}" name="role">
+                <input type="hidden" name="username" value="{{username}}">
+                <button style="background-color:transparent; border:0;" class="nav-link" id="emp_info">Employees Info</button>
+            </form>
+        </li>
+
+        <li class="nav-item">
+              <form method="post" action="/admin_login/about_us">
+                        {% csrf_token %}
+                  <input type="hidden" value="{{role}}" name="role">
+                  <input type="hidden" value="{{username}}" name="username">
+                 <button type="submit" class="nav-link" style="background-color:transparent; border:0;">About</button>
+              </form>
+        </li>
+
+        <li class="nav-item">
+              <form method="post" action="/admin_login/contact_us">
+                        {% csrf_token %}
+                  <input type="hidden" value="{{role}}" name="role">
+                  <input type="hidden" value="{{username}}" name="username">
+                <button type="submit" class="nav-link" style="background-color:transparent; border:0;">Contact Us</button>
+              </form>
+        </li>
+
+        <li class="nav-item">
+                 <form method="post" action="/customer_login/user_logout">
+                           {% csrf_token %}
+                     <input type="hidden" value="{{role}}" name="role">
+                     <input type="hidden" value="{{username}}" name="username">
+                     <button class="nav-link" style="background-color:transparent; border:0;"  id="emp_logout">Logout</button>
+                 </form>
+        </li>
+    </ul>
+</div>
+{% endblock %}
+  {% block body %}
+
+    <br><br>
+    <div class="container">
+
+       <div class="alert alert-warning" role="alert">
+            <center>EMPLOYEE REGISTRATION FORM!</center>
+</div>
+        <br><br>
+    <form method="post" id="form" enctype="multipart/form-data" action="/employee_login/register_success">
+        {% csrf_token %}<input type="hidden" value="{{role}}" name="role">
+
+        Full Name:       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        {{form.firstName}}
+        <!--<input type="text" Placeholder="FirstName" name="fname">-->
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        {{form.middleName}}
+        <!--<input type="text" Placeholder="Middle Name" name="mname">  -->
+         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        {{form.lastName}}
+        <!--<input type="text" Placeholder="Last Name" name="lname">-->
+        <br><br>
+        Mobile Number:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        {{form.mobileNo}}<br>
+        <div style="color:red"></div>
+        <!--<input type="text" name="mobno">--><br>
+        Employee Name:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        {{form.empName}}
+        <!--<input type="text" name="ename">--><br><br>
+        Enter Password:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <input type="password" name="password" id="repass"><br><br>
+        Re-enter Paswword:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <input type="password" name="repassword" id="confpass"> <br>
+        <div class="err" style="color:red;"></div>
+        <br>
+        Email Address :&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        {{form.emailAdd}}
+        <!--<input type="email" name="email">--><br>
+           <div class="emlerr" style="color:red;"></div>
+        <br>
+
+        Current Salary:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        {{form.salary}}
+        <!--<input type="text" name="sal">--><br><br>
+        Experience: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        {{form.experience}}
+        <!--<input type="text" name="experience">--><br><br>
+        Age:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        {{form.age}}
+        <!--<input type="text" name="age">--><br><br>
+        Temporary Address:<div class="form-group">
+    <textarea class="form-control" name='temporaryAddress' id="FormControlTextarea1" rows="3" required>{{tempadd}}</textarea>
+    <br><br>
+        Pincode: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+        <input type="text" name="tPincode" id="tpin" value="{{temppin}}" required>
+        <br><br>
+        <input type="checkbox" id="addchk">Is your Permanent address same as Temporary address?<br><br>
+        Permanent Address:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <br><br>
+
+        <textarea class="form-control" name='permanentAddress' required id="FormControlTextarea2" rows="3">{{permadd}}</textarea>
+        <br><br>
+        Pincode: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <input type="text" name="pPincode" required id="ppin"value="{{permpin}}">
+        <br><br>
+        </div>
+        Gender: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;
+        <input type="radio" name="gender" value="Male" id="genm">Male    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <input type="radio" name="gender" value="Female" id="genf">Female     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <input type="radio" name="gender" value="Others" id="geno">Others<br>
+        <br>
+        <div class="err1" style="color:red;"></div><br>
+        <input type="hidden" name="username" value="{{username}}">
+        <center> <button type="submit" id="register" class="btn btn-primary">Register</button></center><br><br>
+        <div style="color:red">{{error}}</div>
+    </form>
+        </div>
+{% endblock %}
+
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <!--<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>-->
+    <!--<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>-->
+    <!--<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>-->
+<!--<script src="https://code.jquery.com/jquery-3.1.1.min.js"> </script>-->
+  {% block js %}
+    <script>
+             var allowsubmit = false;
+        $(function(){
+            //onkeypress
+            $(document).ready(function(){
+            $('#emlfld').val('');
+            if( $('#FormControlTextarea1').val()=="" && $('#tpin').val()=="")
+            {
+                $('#addchk').prop('disabled',true)
+            }
+
+
+
+            });
+
+            $('#FormControlTextarea1').keyup(function(){
+            if($(this).val()!="" && $('#tpin').val()!="")
+            {
+             $('#addchk').prop('disabled',false)
+
+            }
+               else
+            {
+             $('#addchk').prop('disabled',true)
+            }
+
+            });
+
+                     $('#tpin').keyup(function(){
+            if($(this).val()!="" && $('#FormControlTextarea1').val()!="")
+            {
+             $('#addchk').prop('disabled',false)
+            }
+            else
+            {
+             $('#addchk').prop('disabled',true)
+            }
+
+            });
+
+
+            $('#confpass,#repass').keyup(function(e){
+            //post values
+            var pwd= $('#repass').val();
+            var confpwd=$('#confpass').val();
+
+            if(pwd == confpwd){
+                $('.err').text('');
+                allowsubmit = true;
+
+            }else{
+            $('.err').text('password not matching');
+            allowsubmit = false;
+            }
+            });
+
+
+            $('#emlfld').on('keyup',function(){
+                var email = $(this).val();
+                console.log(email)
+                $.ajax({
+                type:'POST',
+                url:'/employee_login/ajax/validate_email/',
+                data:{
+                    'email' : email,
+                    'csrfmiddlewaretoken': '{{ csrf_token }}'
+                },
+                dataType: 'json',
+                success: function(data){
+                console.log(data.is_taken)
+                    if(data.is_taken){
+                        $('.emlerr').text('Email is already taken')
+                        $('#register').attr('disabled',true)
+
+                    }
+                    if(!data.is_taken){
+                     $('.emlerr').text('')
+                     $('#register').attr('disabled',false)
+                    }
+                    }
+                });
+
+            });
+
+            $('#form').submit(function()
+            {
+            // var email = $('#emlfld').val();
+              //  console.log(email)
+                //$.ajax({
+                //type:'POST',
+                //url:'/employee_login/ajax/validate_email/',
+                //data:{
+                  //  'email' : email,
+                    //'csrfmiddlewaretoken': '{{ csrf_token }}'
+             //   },
+               // dataType: 'json',
+                //success: function(data){
+                //console.log(data.is_taken)
+                  //  if(data.is_taken){
+                    //    $('.emlerr').text('Email is already taken')
+                      //  $('#register').attr('disabled',true);
+                        //return false
+
+                    //}
+
+                    //}
+               // });
+
+                var pwd = $('#repass').val();
+                var confpwd = $('#confpass').val();
+                var gen1=$("input[name='gender']:checked").val();
+                $('.err1').text('');
+                if(pwd==""){
+                    $('.err').text('please enter password');
+                    return false;
+                }
+
+                if(pwd == confpwd){
+                    if (gen1)
+                    {
+                    $('#ppin,#FormControlTextarea2').prop('disabled',false);
+                    return true;
+                    }
+                    else{
+                    $('.err1').text('please select your gender');
+                    return false;
+                    }
+                    }
+                else{
+                     $('.err').text('password not matching');
+                    return false;
+                    }
+
+
+
+
+
+
+            });
+
+               $('#addchk').click(function()
+                 {
+                if ($(this).prop('checked')==true)
+                {
+                    add = $('#FormControlTextarea1').val();
+                    pin=$('#tpin').val();
+                    $('#FormControlTextarea2').val(add);
+                    $('#ppin').val(pin);
+                    $('#FormControlTextarea2,#ppin').prop('disabled',true);
+              }
+              else if($(this).prop('checked')==false)
+              {
+                    $('#FormControlTextarea2').val('');
+                    $('#ppin').val('');
+                    $('#FormControlTextarea2,#ppin').prop('disabled',false);
+                    }
+            });
+    $('#emp_logout').click(function(){
+localStorage.removeItem('cart','chkcart');
+
+})
+
+window.onunload=function(){
+localStorage.removeItem('cart','chkcart');
+}
+
+            });
+
+
+
+    </script>
+
+ {% endblock %}

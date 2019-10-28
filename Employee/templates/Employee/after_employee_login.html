@@ -1,0 +1,201 @@
+{% extends 'base.html' %}
+{% block title %} Homepage{% endblock %}
+{% block nav_title %} WELCOME {{username}} {% endblock %}
+{% block nav_items %}
+<div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+    <ul class="navbar-nav">
+        <li>
+            <form method="post" action="/employee_login/after_login">
+                    {% csrf_token %}
+                <input type="hidden" value="{{role}}" name="role">
+                <input type="hidden" value="{{username}}" name="username">
+                <button style="background-color:transparent; border:0;" class="nav-link active">Home</button>
+            </form>
+        </li>
+
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle"  id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">More Options</a>
+            <div class="dropdown-menu bg-dark" aria-labelledby="navbarDropdownMenuLink">
+
+                 <a class="dropdown-item bg-dark">
+                    <form method="post" action="/employee_login/emp_profile_show">
+                        {% csrf_token %}
+                        <input type="hidden" value="{{role}}" name="role">
+                        <input type="hidden" value="{{username}}" name="username">
+                        <button style="background-color:transparent; border:0;" class="nav-link">My Profile</button>
+                    </form>
+                 </a>
+
+                 <a class="dropdown-item bg-dark">
+                    <form method="post" action="/employee_login/change_password">
+                       {% csrf_token %}
+                        <input type="hidden" value="{{role}}" name="role">
+                        <input type="hidden" name="username" value="{{username}}">
+                        <button style="background-color:transparent; border:0;" class="nav-link" id="chngpass">Change Password</button>
+                    </form>
+                 </a>
+
+                 <a class="dropdown-item bg-dark">
+                     <form method="post" action="/employee_login/delivered_orders">
+                       {% csrf_token %}
+                       <input type="hidden" value="{{role}}" name="role">
+                       <input type="hidden" value="{{username}}" name="username">
+                       <button type="submit" style="background-color:transparent; border:0;" class="nav-link"  id="delivered_orders">View Delivered Orders</button>
+                     </form>
+                 </a>
+
+            </div>
+        </li>
+
+        <li class="nav-item">
+             <form method="post" action="/employee_login/orders">
+                 {% csrf_token %}
+                 <input type="hidden" value="{{role}}" name="role">
+                 <button type="submit" style="background-color:transparent; border:0;" id="view_orders" class="nav-link">View Orders</button>
+                 <input type="hidden" value="{{username}}" name="username">
+             </form>
+        </li>
+
+        <li class="nav-item">
+             <form method="post" action="/books/add_book">
+                 {% csrf_token %}
+                 <input type="hidden" value="{{role}}" name="role">
+                 <input type="hidden" name="username" value="{{username}}">
+                 <button style="background-color:transparent; border:0;" class="nav-link"  id="add_book">Add Book</button>
+             </form>
+        </li>
+
+        <li>
+            <form class="form-inline" method="post" action="/employee_login/on_search">
+               {% csrf_token %}
+               <input type="hidden" value="{{role}}" name="role">
+               <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search" name="srch">
+               <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+   &nbsp;&nbsp;&nbsp;
+                <select name="sel_cr" class="form-control mr-sm-2">
+                    <option value="selection_criteria" name="sel_cr">Search By</option>
+                    <option value="category" name="sel_cr">Category</option>
+                    <option value="book_name" name="sel_cr"> Book Name</option>
+                    <option value="upl" name="sel_cr">Price not more than</option>
+                    <option value="lpl" name="sel_cr">Price not less than</option>
+                </select>
+                <input type="hidden" name="username" value="{{username}}">
+            </form>
+        </li>
+
+        <li class="nav-item">
+            <form method="post" action="/employee_login/about_us">
+                {% csrf_token %}
+                <input type="hidden" value="{{role}}" name="role">
+                <input type="hidden" value="{{username}}" name="username">
+                <button type="submit" class="nav-link" style="background-color:transparent; border:0;">About</button>
+            </form>
+        </li>
+
+        <li class="nav-item">
+            <form method="post" action="/employee_login/contact_us">
+                {% csrf_token %}
+                <input type="hidden" value="{{role}}" name="role">
+                <input type="hidden" value="{{username}}" name="username">
+                <button type="submit" class="nav-link" style="background-color:transparent; border:0;">Contact Us</button>
+            </form>
+        </li>
+
+        <li class="nav-item">
+             <form method="post" action="/customer_login/user_logout">
+                 {% csrf_token %}
+                 <input type="hidden" value="{{role}}" name="role">
+                 <input type="hidden" value="{{username}}" name="username">
+                 <button class="nav-link" style="background-color:transparent; border:0;"  id="emp_logout">Logout</button>
+             </form>
+        </li>
+   </ul>
+</div>
+{% endblock %}
+{% block body %}
+<center><h2>{{empty_condition}}</h2></center>
+<div class="row">
+    <div class="col">
+{% for product,cat in products %}
+
+<br>
+<center><div style="background-color:red; width:200px; border-radius:15px;"><u><h1 style="color:black;">{{cat}}</h1></u></div></center>
+<br><br>
+
+
+<div class="row mb-4 ml-4">
+{% for i in product%}
+<div class="col-xs-3 col-sm-3 col-md-3">
+<div class="card" style="width: 18rem; height:auto">
+  <img src="/media/{{i.image}}" class="card-img-top" alt="..." height="400px">
+  <div class="card-body">
+    <h5 class="card-title">{{i.title}}</h5>
+    <p class="card-text">{{i.description|slice:":150"}}...</p>
+     <table> <tr><td>
+      <form method="post" action="/employee_login/book_description">
+                {% csrf_token %}<input type="hidden" value="{{role}}" name="role">
+    <button type="submit"  class="btn btn-primary">View</button>
+          <input type="hidden" value="{{username}}" name="username">
+      <input type="hidden" value="{{i.id}}" name="bid">
+      </form>
+          </td><td>
+      <form method="post" action="/books/update_book">
+                {% csrf_token %}<input type="hidden" value="{{role}}" name="role">
+          <input type="hidden" value="{{i.id}}" name="bid">
+          <input type="hidden" value="{{username}}" name="username">
+      <button class="btn btn-warning">UPDATE</button>
+          </form>
+      </td><td>
+      <form method="post" action="/books/delete_book">
+                {% csrf_token %}<input type="hidden" value="{{role}}" name="role">
+          <input type="hidden" value="{{i.id}}" name="bid">
+          <input type="hidden" value="{{username}}" name="username">
+      <button id="del" class="btn btn-danger">DELETE</button>
+      </form></td></tr>
+          </table>
+  </div>
+    </div>
+</div>
+        {% if forloop.counter|divisibleby:4 and not forloop.last %}
+        </div><div class="row mb-4 ml-4">
+        {% endif %}
+    {%endfor%}
+    </div>
+
+    {% endfor %}
+   </div>
+
+
+</div>
+{% endblock %}
+{% block js %}
+<script>
+//localStorage.setItem('username','{{username}}');
+
+$(function()
+{
+//$('#emp_logout').click(function()
+//{
+//localStorage.removeItem('username');
+//});
+
+$('#del').click(function(){
+var id=this.id.toString();
+console.log(id)
+var cnrfm = confirm("do ypu realy want to delete this item?")
+if (cnrfm==false){
+return false;
+}
+});
+
+    $('#emp_logout').click(function(){
+localStorage.removeItem('cart','chkcart');
+
+})
+
+window.onunload=function(){
+localStorage.removeItem('cart','chkcart');
+}
+});
+</script>
+{% endblock %}

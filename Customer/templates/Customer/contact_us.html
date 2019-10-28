@@ -1,0 +1,110 @@
+{% extends 'base.html' %}
+{% block title %} Contact Us{% endblock %}
+{% block nav_title %} WELCOME {{username}} {% endblock %}
+{% block nav_items %}
+<div class="collapse navbar-collapse justify-content-end sticky-top" id="navbarNav">
+    <ul class="navbar-nav">
+        <li class="nav-item">
+            <form method="post" action="/customer_login/after_login">
+                    {% csrf_token %}
+                <input type="hidden" value="{{role}}" name="role">
+                <input type="hidden" value="{{username}}" name="username">
+                <button style="background-color:transparent; border:0;" class="nav-link">Home</button>
+             </form>
+        </li>
+
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle"  id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">More Options</a>
+           <div class="dropdown-menu bg-dark" aria-labelledby="navbarDropdownMenuLink">
+
+            <a class="dropdown-item bg-dark">
+                <form method="post" action="/customer_login/cust_profile">
+                    {% csrf_token %}
+                    <input type="hidden" value="{{role}}" name="role">
+                    <input type="hidden" value="{{username}}" name="username">
+                    <button style="background-color:transparent; border:0;" class="nav-link">My Profile</button>
+                </form>
+            </a>
+
+            <a class="dropdown-item bg-dark">
+                <form method="post" action="/customer_login/change_password">
+                    {% csrf_token %}
+                    <input type="hidden" value="{{role}}" name="role">
+                    <input type="hidden" name="username" value="{{username}}">
+                    <button style="background-color:transparent; border:0;" class="nav-link" id="chngpass">Change Password</button>
+                </form>
+            </a>
+
+            <a class="dropdown-item bg-dark">
+                 <form method="post" action="/customer_login/cust_feedback">
+                       {% csrf_token %}
+                     <input type="hidden" value="{{role}}" name="role">
+                     <input type="hidden" value="{{username}}" name="username">
+                     <button style="background-color:transparent; border:0;" class="nav-link">Give Feedback</button>
+                 </form>
+            </a>
+
+           </div>
+        </li>
+
+
+        <li class="nav-items">
+            <form method="post" action="/cart/cart_orders">
+                      {% csrf_token %}
+                <input type="hidden" value="{{role}}" name="role">
+                <input type="hidden" value="{{username}}" name="username">
+                <button type="submit" class="btn btn-warning" >My Cart</button>
+            </form>
+        </li> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+        <li class="nav-item">
+          <form method="post" action="/customer_login/about_us">
+                    {% csrf_token %}
+              <input type="hidden" value="{{role}}" name="role">
+              <input type="hidden" value="{{username}}" name="username">
+            <button type="submit" class="nav-link" style="background-color:transparent; border:0;">About</button>
+          </form>
+        </li>
+
+        <li class="nav-item">
+          <form method="post" action="/customer_login/contact_us">
+                    {% csrf_token %}
+              <input type="hidden" value="{{role}}" name="role">
+              <input type="hidden" value="{{username}}" name="username">
+              <button type="submit" class="nav-link active" style="background-color:transparent; border:0;">Contact Us</button>
+          </form>
+        </li>
+
+        <li class="nav-item">
+            <form method="post" action="/customer_login/user_logout">
+                       {% csrf_token %}
+                <input type="hidden" value="{{role}}" name="role">
+                <button  type="submit" class="nav-link" id="cust_logout" style="background-color:transparent; border:0;">Logout</button>
+                <input type="hidden" value="{{username}}" name="username">
+            </form>
+        </li>
+
+   </ul>
+</div>
+{% endblock %}
+{% block body %}
+<center>
+<div class="alert alert-dark" role="alert">
+    <h3>You can contact us on <b>{{adm.mobileNo}}</b> or can email us on <b>{{adm.emailAdd}}</b></h3>
+    <br>
+    <h3>Thank you for being part of this site!</h3>
+</div>
+</center>
+{% endblock %}
+{% block js %}
+<script>
+         $('#cust_logout').click(function(){
+localStorage.removeItem('cart','chkcart');
+
+})
+
+//window.onunload=function(){
+//localStorage.removeItem('cart','chkcart');
+//}
+</script>
+{% endblock %}

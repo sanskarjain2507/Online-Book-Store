@@ -1,0 +1,220 @@
+{% extends 'base.html' %}
+{% block title %}{{product.title}}{% endblock %}
+{% block nav_title %} WELCOME {{username}} {% endblock %}
+{% block nav_items %}
+<div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+    <ul class="navbar-nav">
+        <li>
+            <form method="post" action="/employee_login/after_login">
+                    {% csrf_token %}
+                <input type="hidden" value="{{role}}" name="role">
+                <input type="hidden" value="{{username}}" name="username">
+                <button style="background-color:transparent; border:0;" class="nav-link">Home</button>
+            </form>
+        </li>
+
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle"  id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">More Options</a>
+            <div class="dropdown-menu bg-dark" aria-labelledby="navbarDropdownMenuLink">
+
+                 <a class="dropdown-item bg-dark">
+                    <form method="post" action="/employee_login/emp_profile_show">
+                        {% csrf_token %}
+                        <input type="hidden" value="{{role}}" name="role">
+                        <input type="hidden" value="{{username}}" name="username">
+                        <button style="background-color:transparent; border:0;" class="nav-link">My Profile</button>
+                    </form>
+                 </a>
+
+                 <a class="dropdown-item bg-dark">
+                    <form method="post" action="/employee_login/change_password">
+                       {% csrf_token %}
+                        <input type="hidden" value="{{role}}" name="role">
+                        <input type="hidden" name="username" value="{{username}}">
+                        <button style="background-color:transparent; border:0;" class="nav-link" id="chngpass">Change Password</button>
+                    </form>
+                 </a>
+
+                 <a class="dropdown-item bg-dark">
+                     <form method="post" action="/employee_login/delivered_orders">
+                       {% csrf_token %}
+                       <input type="hidden" value="{{role}}" name="role">
+                       <input type="hidden" value="{{username}}" name="username">
+                       <button type="submit" style="background-color:transparent; border:0;" class="nav-link"  id="delivered_orders">View Delivered Orders</button>
+                     </form>
+                 </a>
+
+            </div>
+        </li>
+
+        <li class="nav-item">
+             <form method="post" action="/employee_login/orders">
+                 {% csrf_token %}
+                 <input type="hidden" value="{{role}}" name="role">
+                 <button type="submit" style="background-color:transparent; border:0;" id="view_orders" class="nav-link">View Orders</button>
+                 <input type="hidden" value="{{username}}" name="username">
+             </form>
+        </li>
+
+        <li class="nav-item">
+             <form method="post" action="/books/add_book">
+                 {% csrf_token %}
+                 <input type="hidden" value="{{role}}" name="role">
+                 <input type="hidden" name="username" value="{{username}}">
+                 <button style="background-color:transparent; border:0;" class="nav-link"  id="add_book">Add Book</button>
+             </form>
+        </li>
+
+        <li class="nav-item">
+            <form method="post" action="/employee_login/about_us">
+                {% csrf_token %}
+                <input type="hidden" value="{{role}}" name="role">
+                <input type="hidden" value="{{username}}" name="username">
+                <button type="submit" class="nav-link" style="background-color:transparent; border:0;">About</button>
+            </form>
+        </li>
+
+        <li class="nav-item">
+            <form method="post" action="/employee_login/contact_us">
+                {% csrf_token %}
+                <input type="hidden" value="{{role}}" name="role">
+                <input type="hidden" value="{{username}}" name="username">
+                <button type="submit" class="nav-link" style="background-color:transparent; border:0;">Contact Us</button>
+            </form>
+        </li>
+
+        <li class="nav-item">
+             <form method="post" action="/customer_login/user_logout">
+                 {% csrf_token %}
+                 <input type="hidden" value="{{role}}" name="role">
+                 <input type="hidden" value="{{username}}" name="username">
+                 <button class="nav-link" style="background-color:transparent; border:0;"  id="emp_logout">Logout</button>
+             </form>
+        </li>
+   </ul>
+</div>
+{% endblock %}
+{% block body %}
+
+<div class="container">
+    <div class="border border-warning rounded pb-5">
+
+    <img src="/media/{{product.image}}" height="500px" width="600px" style="positon:relative; padding-left:10px; padding-top:10px; padding-bottom:10px;">
+
+    <div style="position:relative; left:50px">
+        <table>
+            <tr>
+                <th>Title:</th>
+                <td>{{product.title}}</td>
+            </tr>
+
+             <tr>
+                <th>Author:</th>
+                <td>{{product.author}}</td>
+            </tr>
+
+             <tr>
+                <th>Price:</th>
+                <th>{{product.mrp}}/-</th>
+            </tr>
+
+             <tr>
+                <th>Book id:</th>
+                <td>{{product.bookId}}</td>
+            </tr>
+
+             <tr>
+                <th>Publisher:</th>
+                <td>{{product.publisher}}</td>
+            </tr>
+
+             <tr>
+                <th>Langusge:</th>
+                <td>{{product.language}}</td>
+            </tr>
+
+             <tr>
+                <th>ISBN:</th>
+                <td>{{product.isbn}}</td>
+            </tr>
+
+             <tr>
+                <th></th>
+                <td></td>
+            </tr>
+
+             <tr>
+                <th>Available</th>
+                 {% if product.quantity > 0%}
+                <td>Yes</td>
+                 {% endif %}
+                 {% if product.quantity <= 0%}
+                 <td>Out of stock</td>
+                 {% endif %}
+            </tr>
+        </table>
+    </div>
+        <br><br>
+        <center>
+            <table><tr>
+        <td>
+      <form method="post" action="/books/update_book">
+                {% csrf_token %}<input type="hidden" value="{{role}}" name="role">
+          <input type="hidden" value="{{product.id}}" name="bid">
+          <input type="hidden" value="{{username}}" name="username">
+      <button class="btn btn-warning">UPDATE</button>
+          </form>
+      </td><td>
+      <form method="post" action="/books/delete_book">
+                {% csrf_token %}<input type="hidden" value="{{role}}" name="role">
+          <input type="hidden" value="{{product.id}}" name="bid">
+          <input type="hidden" value="{{username}}" name="username">
+      <button id="del" class="btn btn-danger">DELETE</button>
+      </form></td></tr>
+          </table>
+ <br>
+              </center>
+      </div>
+
+        <BR><BR>
+        <p>
+        <center><h2>DESCRIPTION</h2></center><br>
+            {{product.description}}
+        </p>
+    </div>
+
+
+
+
+{% endblock %}
+{% block js %}
+<script>
+//localStorage.setItem('username','{{username}}');
+
+$(function()
+{
+//$('#emp_logout').click(function()
+//{
+//localStorage.removeItem('username');
+//});
+
+$('#del').click(function(){
+var id=this.id.toString();
+console.log(id)
+var cnrfm = confirm("do ypu realy want to delete this item?")
+if (cnrfm==false){
+return false;
+}
+});
+
+    $('#emp_logout').click(function(){
+localStorage.removeItem('cart','chkcart');
+
+})
+
+window.onunload=function(){
+localStorage.removeItem('cart','chkcart');
+}
+});
+</script>
+{% endblock %}
